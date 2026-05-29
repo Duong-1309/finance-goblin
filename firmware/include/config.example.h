@@ -15,6 +15,12 @@
 // Leave empty string if backend has no key configured
 #define DEVICE_API_KEY ""
 
+// MQTT broker (same machine as backend)
+#define MQTT_BROKER_IP   "your-backend-ip"
+#define MQTT_PORT        1883
+#define MQTT_TOPIC       "goblin/display"
+#define MQTT_CLIENT_ID   "finance-goblin-esp32"
+
 // RGB LED wiring assumption: common cathode (LOW = off, HIGH = on).
 // Change LED logic in led_controller if using common anode.
 #define RGB_COMMON_CATHODE true
