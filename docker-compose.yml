@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/credentials:/app/credentials
+    restart: unless-stopped
+
+  bot:
+    build: ./backend
+    command: python run_bot.py
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/credentials:/app/credentials
+    depends_on:
+      - backend
+    restart: unless-stopped

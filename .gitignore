@@ -1,0 +1,24 @@
+# Secrets & credentials
+backend/.env
+backend/credentials/
+firmware/include/config.h
+
+# Data
+backend/data/
+*.db
+*.xlsx
+
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# PlatformIO build
+firmware/.pio/
+
+# macOS
+.DS_Store
+
+# IDE
+.claude/

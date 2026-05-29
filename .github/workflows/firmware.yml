@@ -1,0 +1,33 @@
+name: Firmware Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "firmware/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "firmware/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: pio-${{ hashFiles('firmware/platformio.ini') }}
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Create dummy config
+        run: cp firmware/include/config.example.h firmware/include/config.h
+
+      - name: Build firmware
+        run: pio run
+        working-directory: firmware

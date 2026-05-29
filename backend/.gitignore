@@ -1,0 +1,17 @@
+# Credentials — never commit
+credentials/
+
+# Database files
+data/
+*.db
+
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment
+.env
