@@ -20,6 +20,7 @@ CATEGORIES = [
     "Nhà cửa",
     "Người thân",
     "Đầu tư",
+    "Khác",
 ]
 
 SYSTEM_PROMPT = (
@@ -52,8 +53,8 @@ def parse_spending(text: str) -> dict[str, str | float]:
         return {
             "description": data.get("description") or text,
             "amount": float(data.get("amount") or 0),
-            "category": data["category"] if data.get("category") in CATEGORIES else "NULL",
+            "category": data["category"] if data.get("category") in CATEGORIES else "Khác",
         }
     except Exception as e:
         logger.warning("GPT parse failed: %s", e)
-        return {"description": text, "amount": 0.0, "category": "NULL"}
+        return {"description": text, "amount": 0.0, "category": "Khác"}

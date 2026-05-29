@@ -9,12 +9,14 @@ class Settings(BaseSettings):
     google_credentials_path: str = "credentials/google-service-account.json"
     telegram_token: str = ""
     telegram_chat_id: str = ""
-    gemini_api_key: str = ""
     openai_api_key: str = ""
     monthly_budget: float = 20_000_000
     device_api_key: str = ""
+    mqtt_broker_host: str = "localhost"
+    mqtt_broker_port: int = 1883
+    mqtt_topic_display: str = "goblin/display"
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 settings = Settings()
