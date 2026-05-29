@@ -8,9 +8,13 @@ from app.core.config import settings
 from app.db.database import get_connection, init_db
 from app.db.transaction_repo import insert_transaction
 from app.models.transaction import Transaction
-from app.services.gemini_parser import parse_spending
+from app.services.ai_message import generate_expense_event_message
+from app.services.analyzer import analyze
+from app.services.expense_parser import parse_spending
+from app.services.mqtt_publisher import publish_display
 from app.services.sheet_sync import sync_sheet
 from app.services.sheet_writer import append_spending
+from app.services.state_builder import build_device_state
 
 logger = logging.getLogger(__name__)
 
@@ -222,6 +226,15 @@ def handle_expense(message: telebot.types.Message) -> None:
         insert_transaction(tx, sheet=sheet_name, db_path=DB_PATH)
     except Exception as e:
         logger.warning("Local DB insert failed: %s", e)
+
+    # 3. Push contextual event message to OLED via MQTT
+    try:
+        result = analyze(DB_PATH)
+        msg = generate_expense_event_message(description, amount, category, result)
+        state = build_device_state(result)
+        publish_display(state.model_copy(update={"line1": msg.line1, "line2": msg.line2}))
+    except Exception as e:
+        logger.warning("MQTT push failed: %s", e)
 
     bot.reply_to(
         message,
