@@ -29,7 +29,6 @@ jobs:
         working-directory: backend
         run: pytest tests/ -v
         env:
-          DB_PATH: ":memory:"
           GOOGLE_SHEET_ID: ""
           GOOGLE_CREDENTIALS_PATH: ""
           TELEGRAM_TOKEN: ""
