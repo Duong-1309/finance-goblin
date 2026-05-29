@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api import device, health
+from app.api import device, health, notify
 from app.core.config import settings
 from app.core.logging_config import setup_logging
 
@@ -22,3 +22,4 @@ app = FastAPI(title=settings.app_name, lifespan=lifespan)
 
 app.include_router(health.router, prefix="/api")
 app.include_router(device.router, prefix="/api")
+app.include_router(notify.router, prefix="/api")

@@ -1,4 +1,13 @@
 services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+    restart: unless-stopped
+
   backend:
     build: ./backend
     ports:
@@ -8,6 +17,8 @@ services:
     volumes:
       - ./backend/data:/app/data
       - ./backend/credentials:/app/credentials
+    depends_on:
+      - mosquitto
     restart: unless-stopped
 
   bot:
@@ -20,4 +31,8 @@ services:
       - ./backend/credentials:/app/credentials
     depends_on:
       - backend
+      - mosquitto
     restart: unless-stopped
+
+volumes:
+  mosquitto_data:
