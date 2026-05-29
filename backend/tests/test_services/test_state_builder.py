@@ -5,9 +5,13 @@ from app.services.state_builder import build_device_state
 
 def make_result(**kwargs) -> AnalysisResult:
     base = dict(
-        daily_total=0, weekly_total=0, monthly_total=5_000_000,
-        top_category="Ăn uống", top_category_amount=5_000_000,
-        budget_usage_pct=25.0, risk_level="low",
+        daily_total=0,
+        weekly_total=0,
+        monthly_total=5_000_000,
+        top_category="Ăn uống",
+        top_category_amount=5_000_000,
+        budget_usage_pct=25.0,
+        risk_level="low",
     )
     base.update(kwargs)
     return AnalysisResult(**base)
@@ -41,9 +45,13 @@ def test_empty_state() -> None:
 
 
 def test_lcd_lines_max_16_chars() -> None:
-    s = build_device_state(make_result(
-        risk_level="high", budget_usage_pct=92,
-        top_category="Chợ - Siêu thị", monthly_total=18_500_000,
-    ))
+    s = build_device_state(
+        make_result(
+            risk_level="high",
+            budget_usage_pct=92,
+            top_category="Chợ - Siêu thị",
+            monthly_total=18_500_000,
+        )
+    )
     assert len(s.line1) <= 16
     assert len(s.line2) <= 16

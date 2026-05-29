@@ -115,6 +115,8 @@ def sync_sheet(db_path: Path | None = None) -> SyncResult:
 
     logger.info(
         "Sync done — imported: %d, skipped: %d, failed: %d",
-        result.imported, result.skipped, result.failed,
+        result.imported,
+        result.skipped,
+        result.failed,
     )
     return result

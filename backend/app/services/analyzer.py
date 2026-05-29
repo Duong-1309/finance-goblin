@@ -13,8 +13,8 @@ class AnalysisResult:
     monthly_total: float
     top_category: str
     top_category_amount: float
-    budget_usage_pct: float   # monthly_total / monthly_budget * 100
-    risk_level: str           # low / medium / high
+    budget_usage_pct: float  # monthly_total / monthly_budget * 100
+    risk_level: str  # low / medium / high
     recent_items: list[dict] = field(default_factory=list)
 
 
@@ -27,6 +27,7 @@ def analyze(db_path: Path | None = None, monthly_budget: float | None = None) ->
     month_start = today.replace(day=1)
 
     with get_connection(db_path) as conn:
+
         def total_since(since: date) -> float:
             row = conn.execute(
                 "SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE date >= ?",

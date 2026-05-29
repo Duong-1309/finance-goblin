@@ -4,9 +4,13 @@ from app.services.message_engine import generate_message
 
 def make_result(**kwargs) -> AnalysisResult:
     base = dict(
-        daily_total=0, weekly_total=0, monthly_total=5_000_000,
-        top_category="An uong", top_category_amount=5_000_000,
-        budget_usage_pct=25.0, risk_level="low",
+        daily_total=0,
+        weekly_total=0,
+        monthly_total=5_000_000,
+        top_category="An uong",
+        top_category_amount=5_000_000,
+        budget_usage_pct=25.0,
+        risk_level="low",
     )
     base.update(kwargs)
     return AnalysisResult(**base)

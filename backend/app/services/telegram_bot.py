@@ -56,20 +56,25 @@ def _get_month_transactions(month_str: str) -> list[dict]:
 
 # ─── HANDLERS ────────────────────────────────────────────
 
+
 @bot.message_handler(commands=["start", "help"])
 def cmd_help(message: telebot.types.Message) -> None:
     if not _guard(message):
         return
-    bot.reply_to(message, (
-        "🧌 <b>Finance Goblin</b>\n\n"
-        "Gõ bất kỳ để ghi chi tiêu.\n\n"
-        "<b>Lệnh:</b>\n"
-        "/report [MM/YYYY] – tổng hợp tháng\n"
-        "/list [MM/YYYY]   – danh sách\n"
-        "/top [MM/YYYY]    – top 10 lớn nhất\n"
-        "/day [DD/MM/YYYY] – chi tiêu theo ngày\n"
-        "/sync             – sync Google Sheet → DB"
-    ), parse_mode="HTML")
+    bot.reply_to(
+        message,
+        (
+            "🧌 <b>Finance Goblin</b>\n\n"
+            "Gõ bất kỳ để ghi chi tiêu.\n\n"
+            "<b>Lệnh:</b>\n"
+            "/report [MM/YYYY] – tổng hợp tháng\n"
+            "/list [MM/YYYY]   – danh sách\n"
+            "/top [MM/YYYY]    – top 10 lớn nhất\n"
+            "/day [DD/MM/YYYY] – chi tiêu theo ngày\n"
+            "/sync             – sync Google Sheet → DB"
+        ),
+        parse_mode="HTML",
+    )
 
 
 @bot.message_handler(commands=["sync"])
@@ -78,11 +83,10 @@ def cmd_sync(message: telebot.types.Message) -> None:
         return
     bot.reply_to(message, "⏳ Đang sync...")
     result = sync_sheet(DB_PATH)
-    bot.reply_to(message,
-        f"✅ Sync xong\n"
-        f"Imported: <b>{result.imported}</b>\n"
-        f"Skipped: {result.skipped}",
-        parse_mode="HTML"
+    bot.reply_to(
+        message,
+        f"✅ Sync xong\nImported: <b>{result.imported}</b>\nSkipped: {result.skipped}",
+        parse_mode="HTML",
     )
 
 
@@ -157,7 +161,7 @@ def cmd_day(message: telebot.types.Message) -> None:
             day_display = arg
         except ValueError:
             bot.reply_to(message, "❌ Dùng định dạng DD/MM/YYYY")
-        return
+            return
     else:
         day_iso = datetime.now().strftime("%Y-%m-%d")
         day_display = datetime.now().strftime("%d/%m/%Y")
@@ -175,7 +179,7 @@ def cmd_day(message: telebot.types.Message) -> None:
     msg = f"📅 Chi tiêu ngày {day_display}\n──────────────────────\n"
     for r in rows:
         msg += f"{r['note']} – {fmt_vnd(r['amount'])} – {r['category']}\n"
-    total = sum(r['amount'] for r in rows)
+    total = sum(r["amount"] for r in rows)
     msg += f"──────────────────────\nTổng: {fmt_vnd(total)}"
     bot.reply_to(message, msg)
 
@@ -195,11 +199,12 @@ def handle_expense(message: telebot.types.Message) -> None:
     category = str(parsed["category"])
 
     if amount <= 0:
-        bot.reply_to(message,
+        bot.reply_to(
+            message,
             f"⚠️ Không parse được số tiền.\n"
             f"Mô tả: <b>{description}</b> – Danh mục: {category}\n"
             "Thử lại với format: <i>cơm trưa 50k ăn uống</i>",
-            parse_mode="HTML"
+            parse_mode="HTML",
         )
         return
 
@@ -218,15 +223,16 @@ def handle_expense(message: telebot.types.Message) -> None:
     except Exception as e:
         logger.warning("Local DB insert failed: %s", e)
 
-    bot.reply_to(message,
-        f"✅ Đã ghi: <b>{description}</b>\n"
-        f"💰 {fmt_vnd(amount)} – {category}",
-        parse_mode="HTML"
+    bot.reply_to(
+        message,
+        f"✅ Đã ghi: <b>{description}</b>\n💰 {fmt_vnd(amount)} – {category}",
+        parse_mode="HTML",
     )
 
 
 def run() -> None:
     import time
+
     init_db(DB_PATH)
     logger.info("Finance Goblin bot starting...")
     # Clear any active webhook or conflicting session before polling

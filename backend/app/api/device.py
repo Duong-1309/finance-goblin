@@ -21,6 +21,9 @@ async def device_state() -> DeviceStateResponse:
     state = build_device_state(result)
     logger.info(
         "device/state — risk=%s budget=%.1f%% mood=%s led=%s",
-        result.risk_level, result.budget_usage_pct, state.mood, state.led,
+        result.risk_level,
+        result.budget_usage_pct,
+        state.mood,
+        state.led,
     )
     return state

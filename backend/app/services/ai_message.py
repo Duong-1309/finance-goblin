@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 _SYSTEM = (
     "You are a sarcastic desk goblin displayed on a 16-character LCD. "
-    "Respond ONLY with JSON: {\"line1\": \"...\", \"line2\": \"...\"}. "
+    'Respond ONLY with JSON: {"line1": "...", "line2": "..."}. '
     "Rules: max 16 ASCII chars per line, no emojis, no Vietnamese, funny goblin tone."
 )
 
@@ -55,12 +55,15 @@ def generate_ai_message(result: AnalysisResult) -> MessageResult:
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": _SYSTEM},
-                {"role": "user", "content": _USER.format(
-                    monthly=f"{result.monthly_total / 1_000_000:.1f}M VND",
-                    pct=result.budget_usage_pct,
-                    cat=result.top_category,
-                    risk=result.risk_level,
-                )},
+                {
+                    "role": "user",
+                    "content": _USER.format(
+                        monthly=f"{result.monthly_total / 1_000_000:.1f}M VND",
+                        pct=result.budget_usage_pct,
+                        cat=result.top_category,
+                        risk=result.risk_level,
+                    ),
+                },
             ],
             temperature=0.9,
             response_format={"type": "json_object"},

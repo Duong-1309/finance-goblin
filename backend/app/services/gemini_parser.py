@@ -8,9 +8,18 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 CATEGORIES = [
-    "Nhà ở", "Ăn uống", "Chợ - Siêu thị", "Di chuyển", "Mua sắm",
-    "Giải trí", "Làm đẹp", "Sức khoẻ", "Hoá đơn", "Nhà cửa",
-    "Người thân", "Đầu tư",
+    "Nhà ở",
+    "Ăn uống",
+    "Chợ - Siêu thị",
+    "Di chuyển",
+    "Mua sắm",
+    "Giải trí",
+    "Làm đẹp",
+    "Sức khoẻ",
+    "Hoá đơn",
+    "Nhà cửa",
+    "Người thân",
+    "Đầu tư",
 ]
 
 SYSTEM_PROMPT = (
@@ -20,7 +29,7 @@ SYSTEM_PROMPT = (
 )
 
 USER_PROMPT = (
-    'Trích xuất: description (sửa lỗi chính tả), amount (VND, số nguyên), category.\n'
+    "Trích xuất: description (sửa lỗi chính tả), amount (VND, số nguyên), category.\n"
     'Trả về JSON: {{"description": "...", "amount": 0, "category": "..."}}\n'
     'Input: "{text}"'
 )

@@ -21,7 +21,8 @@ def db(tmp_path: Path) -> Path:
     ]:
         insert_transaction(
             Transaction(date=today, amount=amount, note=note, category=cat),
-            sheet="052026", db_path=p,
+            sheet="052026",
+            db_path=p,
         )
     return p
 
@@ -43,7 +44,7 @@ def test_top_category(db: Path) -> None:
 
 def test_risk_low(db: Path) -> None:
     result = analyze(db_path=db, monthly_budget=20_000_000)
-    assert result.risk_level == "low"   # 4.15M / 20M = 20%
+    assert result.risk_level == "low"  # 4.15M / 20M = 20%
 
 
 def test_risk_high(db: Path) -> None:
