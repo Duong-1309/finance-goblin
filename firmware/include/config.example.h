@@ -11,6 +11,10 @@
 // Local development example: "http://192.168.1.100:8000"
 #define BACKEND_URL   "http://your-backend-ip:8000"
 
+// Device API key — must match DEVICE_API_KEY in backend .env
+// Leave empty string if backend has no key configured
+#define DEVICE_API_KEY ""
+
 // RGB LED wiring assumption: common cathode (LOW = off, HIGH = on).
 // Change LED logic in led_controller if using common anode.
 #define RGB_COMMON_CATHODE true

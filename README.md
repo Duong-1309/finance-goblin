@@ -1,6 +1,6 @@
 # Finance Goblin 🧌
 
-[![Tests](https://github.com/YOUR_USERNAME/finance-goblin/actions/workflows/test.yml/badge.svg)](https://github.com/YOUR_USERNAME/finance-goblin/actions/workflows/test.yml)
+[![Tests](https://github.com/Duong-1309/finance-goblin/actions/workflows/test.yml/badge.svg)](https://github.com/Duong-1309/finance-goblin/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
 [![PlatformIO](https://img.shields.io/badge/firmware-PlatformIO-orange.svg)](https://platformio.org)

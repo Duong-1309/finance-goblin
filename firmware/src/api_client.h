@@ -42,6 +42,11 @@ DeviceState fetch_device_state(const char* backend_url) {
     http.begin(url);
     http.setTimeout(HTTP_TIMEOUT_MS);
 
+    // Add device key header if configured
+    if (strlen(DEVICE_API_KEY) > 0) {
+        http.addHeader("X-Device-Key", DEVICE_API_KEY);
+    }
+
     int status = http.GET();
 
     if (status != 200) {
