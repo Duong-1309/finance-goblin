@@ -37,10 +37,13 @@ def _parse_amount(raw: str) -> float:
 
 def _parse_date(raw: str) -> date | None:
     """Parse DD/MM/YYYY → date."""
-    try:
-        return datetime.strptime(raw.strip(), "%d/%m/%Y").date()
-    except ValueError:
-        return None
+    raw = raw.strip()
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%m/%d/%Y"):
+        try:
+            return datetime.strptime(raw, fmt).date()
+        except ValueError:
+            continue
+    return None
 
 
 def _parse_row(row: list[str]) -> Transaction | None:
@@ -73,8 +76,12 @@ def _parse_row(row: list[str]) -> Transaction | None:
         return None
 
 
-def sync_sheet(db_path: Path | None = None) -> SyncResult:
-    """Sync all new-format monthly sheets from Google Sheets into SQLite."""
+def sync_sheet(db_path: Path | None = None, only_month: str | None = None) -> SyncResult:
+    """Sync new-format monthly sheets from Google Sheets into SQLite.
+
+    Args:
+        only_month: If set (MM/YYYY), sync only that sheet. Otherwise sync all.
+    """
     db_path = db_path or Path(settings.db_path)
     init_db(db_path)
 
@@ -89,6 +96,9 @@ def sync_sheet(db_path: Path | None = None) -> SyncResult:
 
         if not _MONTHLY_SHEET_RE.match(sheet_name):
             logger.debug("Skipping non-monthly sheet: %s", sheet_name)
+            continue
+
+        if only_month and sheet_name != only_month:
             continue
 
         rows = worksheet.get_all_values()
