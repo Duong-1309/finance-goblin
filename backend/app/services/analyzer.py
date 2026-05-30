@@ -3,6 +3,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from app.core.config import settings
+from app.db.allocation_repo import get_allocation_total
 from app.db.database import get_connection
 
 
@@ -20,9 +21,11 @@ class AnalysisResult:
 
 def analyze(db_path: Path | None = None, monthly_budget: float | None = None) -> AnalysisResult:
     db_path = db_path or Path(settings.db_path)
-    budget = monthly_budget or float(getattr(settings, "monthly_budget", 20_000_000))
-
     today = date.today()
+    current_month = today.strftime("%m/%Y")
+    # Budget priority: argument > allocations total > settings default
+    alloc_total = get_allocation_total(current_month, db_path)
+    budget = monthly_budget or alloc_total or float(settings.monthly_budget)
     week_start = today - timedelta(days=today.weekday())
     month_start = today.replace(day=1)
 

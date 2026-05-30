@@ -17,6 +17,35 @@ CREATE TABLE IF NOT EXISTS transactions (
 )
 """
 
+CREATE_INCOME = """
+CREATE TABLE IF NOT EXISTS income (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    date    TEXT    NOT NULL,
+    amount  REAL    NOT NULL,
+    source  TEXT    NOT NULL,
+    note    TEXT    NOT NULL DEFAULT '',
+    month   TEXT    NOT NULL
+)
+"""
+
+CREATE_ALLOCATIONS = """
+CREATE TABLE IF NOT EXISTS budget_allocations (
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    month    TEXT    NOT NULL,
+    category TEXT    NOT NULL,
+    amount   REAL    NOT NULL,
+    UNIQUE(month, category)
+)
+"""
+
+CREATE_BUDGETS = """
+CREATE TABLE IF NOT EXISTS budgets (
+    category   TEXT PRIMARY KEY,
+    amount     REAL NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+)
+"""
+
 CREATE_GENERATED_MESSAGES = """
 CREATE TABLE IF NOT EXISTS generated_messages (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,6 +67,9 @@ def init_db(db_path: Path | None = None) -> None:
     with sqlite3.connect(path) as conn:
         conn.execute(CREATE_TRANSACTIONS)
         conn.execute(CREATE_GENERATED_MESSAGES)
+        conn.execute(CREATE_BUDGETS)
+        conn.execute(CREATE_INCOME)
+        conn.execute(CREATE_ALLOCATIONS)
         conn.commit()
 
 

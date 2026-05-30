@@ -3,25 +3,10 @@ import logging
 
 from openai import OpenAI
 
+from app.core.categories import CATEGORIES, CATEGORIES_SET
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
-
-CATEGORIES = [
-    "Nhà ở",
-    "Ăn uống",
-    "Chợ - Siêu thị",
-    "Di chuyển",
-    "Mua sắm",
-    "Giải trí",
-    "Làm đẹp",
-    "Sức khoẻ",
-    "Hoá đơn",
-    "Nhà cửa",
-    "Người thân",
-    "Đầu tư",
-    "Khác",
-]
 
 SYSTEM_PROMPT = (
     "Bạn là trợ lý phân tích chi tiêu. Trích xuất thông tin từ câu mô tả và trả về JSON thuần.\n"
@@ -53,7 +38,7 @@ def parse_spending(text: str) -> dict[str, str | float]:
         return {
             "description": data.get("description") or text,
             "amount": float(data.get("amount") or 0),
-            "category": data["category"] if data.get("category") in CATEGORIES else "Khác",
+            "category": data["category"] if data.get("category") in CATEGORIES_SET else "Khác",
         }
     except Exception as e:
         logger.warning("GPT parse failed: %s", e)
