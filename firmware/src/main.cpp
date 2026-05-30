@@ -39,7 +39,7 @@ void on_mqtt_display(const char* line1, const char* line2,
     g_state = s;
     apply_state(g_state);
     if (!button_is_muted()) {
-        buzzer_play(g_state.buzzer, true);  // force play on push event
+        buzzer_play(g_state.buzzer, true, g_state.mood);  // force play on push event
     }
 }
 
@@ -60,7 +60,7 @@ void setup() {
     g_state = fetch_device_state(BACKEND_URL);
     apply_state(g_state);
     if (!button_is_muted()) {
-        buzzer_play(g_state.buzzer);
+        buzzer_play(g_state.buzzer, false, g_state.mood);
     }
 }
 
@@ -84,7 +84,7 @@ void loop() {
     g_state = fetch_device_state(BACKEND_URL);
     apply_state(g_state);
     if (!button_is_muted()) {
-        buzzer_play(g_state.buzzer);
+        buzzer_play(g_state.buzzer, false, g_state.mood);
     }
 
     int wait_s = (g_state.valid && g_state.refresh_after > 0)

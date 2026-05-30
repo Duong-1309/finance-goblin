@@ -21,6 +21,10 @@
 #define MQTT_TOPIC       "goblin/display"
 #define MQTT_CLIENT_ID   "finance-goblin-esp32"
 
+// Buzzer type: set true for passive buzzer (plays melodies via PWM tone)
+// set false for active buzzer (simple beeps only)
+#define BUZZER_PASSIVE true
+
 // RGB LED wiring assumption: common cathode (LOW = off, HIGH = on).
 // Change LED logic in led_controller if using common anode.
 #define RGB_COMMON_CATHODE true
