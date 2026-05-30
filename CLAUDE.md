@@ -32,32 +32,71 @@ docs/             # Design documents (read these before implementing)
 
 ## Commands
 
-Once scaffolded, the backend runs as:
-
+**Backend:**
 ```bash
 cd backend
 pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
-Tests (once scaffolded):
+# Telegram bot (separate process)
+python run_bot.py
 
-```bash
-cd backend
+# Tests
 pytest
-pytest tests/test_api/test_health.py  # single test file
+pytest tests/test_api/  # single module
+
+# Lint
+ruff check app/ tests/
 ```
 
-Firmware (once scaffolded):
+**Docker (recommended):**
+```bash
+cp backend/env.example backend/.env   # fill credentials
+docker compose up -d                   # starts backend + bot + mosquitto
+docker compose logs -f bot            # watch bot logs
+docker compose up -d --build bot      # rebuild after code changes
+```
 
+**Firmware:**
 ```bash
 cd firmware
-pio run              # build
-pio run --target upload  # flash to ESP32
-pio device monitor   # serial monitor
+cp include/config.example.h include/config.h   # fill WiFi + MQTT
+pio run                          # build
+pio run --target upload          # flash
+pio device monitor               # serial monitor (115200 baud)
 ```
 
 ---
+
+## Architecture (Current)
+
+```
+Telegram bot ──GPT parse──→ Google Sheet ──sync──→ SQLite ──→ FastAPI
+                                                               ↓
+iOS Shortcuts / any HTTP ──→ POST /api/notify ──MQTT──→ ESP32 ──→ OLED + LED + Buzzer
+```
+
+**Backend layers:**
+- `app/api/` — HTTP endpoints (health, device state, notify)
+- `app/services/` — business logic (analyzer, AI messages, sheet sync, MQTT publisher, Telegram bot)
+- `app/db/` — SQLite repos (transactions, income, budget_allocations, budgets)
+- `app/core/` — config, logging, security, categories
+
+**Telegram bot commands:**
+- `/plan` — zero-based budget dashboard (income vs allocations vs actual)
+- `/income [amount] [source]` — log monthly income
+- `/allocate [category] [amount]` — set monthly budget bucket
+- `/clearalloc [category]` — delete allocation
+- `/report [YYYY-MM]` — monthly summary
+- `/budgets` — compact allocation vs spending
+- `/list`, `/top`, `/day` — transaction queries
+- `/sync` — append new rows from Google Sheet
+- `/resync [YYYY-MM|all]` — wipe + reimport (default: current month)
+
+**Date formats (ISO everywhere):**
+- Transactions: `YYYY-MM-DD`
+- Month args: `YYYY-MM` (e.g. `2026-05`)
+- Sheet tabs: `MM/YYYY` (Google Sheet native — converted internally)
 
 ## API Contract
 

@@ -1,5 +1,42 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+**Zero-based budgeting**
+- `/income` — log monthly income by source
+- `/allocate` — assign income to category buckets (case-insensitive, normalized to canonical names)
+- `/plan` — full zero-based dashboard: income → allocations → actual spending → savings rate
+- `/clearalloc [category]` — delete one or all allocations for current month
+- `budget_allocations` + `income` tables in SQLite
+- Analyzer uses allocation total as monthly budget (fallback to settings default)
+
+**Bot improvements**
+- `/resync [YYYY-MM|all]` — resync by month (default: current month) or full reimport
+- `/budgets` always shows spending categories even with no allocations
+- `/setbudget` redirects to `/allocate` with explanation
+- Removed "⏳ Đang xử lý..." message from expense handler
+- Category normalization: user input matched case-insensitively to canonical list
+- `NULL` category fallback → `"Khác"`
+
+**Date format standardization**
+- All commands use ISO format: `YYYY-MM-DD` for days, `YYYY-MM` for months
+- `sheet_sync`: accepts both `DD/MM/YYYY` and `YYYY-MM-DD` date formats from Google Sheet
+
+**Firmware**
+- Passive buzzer melodies per mood (happy/warning/panic/offline/soft)
+- `BUZZER_PASSIVE` flag in `config.h`
+- Melody frequencies shifted to 1–3.5kHz for cheap buzzers
+
+**Infrastructure**
+- `app/core/categories.py` — single source of truth for category list
+- MQTT: `mosquitto.conf`, Mosquitto in Docker Compose, `paho-mqtt` in backend
+- `POST /api/notify` endpoint for external push to OLED
+
+---
+
+
 All notable changes to this project will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
